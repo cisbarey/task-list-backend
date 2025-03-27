@@ -1,11 +1,3 @@
-
----
-
-### **2. README para el Backend**
-
-**`task-list-backend/README.md`:**
-
-```markdown
 # Task List Backend
 
 Este proyecto es la parte backend de una aplicación de lista de tareas desarrollada como parte del **Challenge Técnico FullStack Developer**. Está construido con **Java**, utiliza **Firebase Firestore** para la persistencia de datos, y está desplegado en **Google Cloud Functions**.
