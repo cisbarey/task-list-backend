@@ -1,6 +1,7 @@
 package com.atom.challenge.functions;
 
 import com.atom.challenge.domain.Task;
+import com.atom.challenge.dto.request.TaskUpdateRequest;
 import com.atom.challenge.dto.response.ErrorResponse;
 import com.atom.challenge.exception.DataNotFoundException;
 import com.google.cloud.functions.HttpFunction;
@@ -12,9 +13,9 @@ import java.util.concurrent.ExecutionException;
 
 import static com.atom.challenge.helper.TaskHelper.mapToResponse;
 
-public class CompleteTaskFunction extends Function implements HttpFunction {
+public class UpdateStatusTaskFunction extends Function implements HttpFunction {
 
-    public CompleteTaskFunction() throws IOException {
+    public UpdateStatusTaskFunction() throws IOException {
         super();
     }
 
@@ -27,12 +28,13 @@ public class CompleteTaskFunction extends Function implements HttpFunction {
         try {
             String userId = getUserIdFromRequest(request);
             String taskId = extractTaskId(request.getPath());
+            TaskUpdateRequest taskUpdateRequest = bodyFromRequest(request, TaskUpdateRequest.class);
             Task task = firestore.collection("tasks").document(taskId).get().get().toObject(Task.class);
             if (task == null || !task.getUserId().equals(userId)) {
                 throw new DataNotFoundException("Task not found or not authorized");
             }
 
-            task.setCompleted(true);
+            task.setCompleted(taskUpdateRequest.isStatus());
             firestore.collection("tasks").document(taskId).set(task).get();
 
             response(response, mapToResponse(task), 200);
